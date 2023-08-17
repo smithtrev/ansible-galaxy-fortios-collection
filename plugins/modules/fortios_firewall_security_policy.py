@@ -910,6 +910,15 @@ EXAMPLES = """
         voip_profile: "<your_own_value> (source voip.profile.name)"
         webfilter_profile: "<your_own_value> (source webfilter.profile.name)"
 
+            name: move firewall.policy
+    fortios_firewall_policy:
+      vdom:  "root"
+      action: "move"
+      self: "<mkey of self identifier>"
+      after: "<mkey of target identifier>"
+     #before: "<mkey of target identifier>"
+        
+
 """
 
 RETURN = """
