@@ -1238,10 +1238,46 @@ def is_successful_status(resp):
         and resp["http_status"] == 404
     )
 
+def move_fortios_firewall(data, fos):
+    if not data['self'] or (not data['after'] and not data['before']):
+        fos._module.fail_json(msg='self, after(or before) must not be empty')
+    vdom = data['vdom']
+    params_set = dict()
+    params_set['action'] = 'move'
+    if data['after']:
+        params_set['after'] = data['after']
+    if data['before']:
+        params_set['before'] = data['before']
+    return fos.set('firewall',
+                   'security-policy',
+                   data=None,
+                   mkey=data['self'],
+                   vdom=vdom,
+                   parameters=params_set)
+
+def move_fortios_firewall(data, fos):
+    if not data['self'] or (not data['after'] and not data['before']):
+        fos._module.fail_json(msg='self, after(or before) must not be empty')
+    vdom = data['vdom']
+    params_set = dict()
+    params_set['action'] = 'move'
+    if data['after']:
+        params_set['after'] = data['after']
+    if data['before']:
+        params_set['before'] = data['before']
+    return fos.set('firewall',
+                   'policy',
+                   data=None,
+                   mkey=data['self'],
+                   vdom=vdom,
+                   parameters=params_set)
+
 
 def fortios_firewall(data, fos, check_mode):
     fos.do_member_operation("firewall", "security-policy")
-    if data["firewall_security_policy"]:
+    if data['action'] == 'move':
+        resp = move_fortios_firewall(data, fos)
+    elif data["firewall_security_policy"]:
         resp = firewall_security_policy(data, fos, check_mode)
     else:
         fos._module.fail_json(
